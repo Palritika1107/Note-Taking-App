@@ -1,0 +1,26 @@
+{
+  "counter": 13,
+  "notes": [
+    {
+      "id": 11,
+      "title": "hello-3",
+      "content": "hi",
+      "lastEdited": "2025-11-16T18:53:27.408Z",
+      "isArchived" : false
+    },
+    {
+      "id": 12,
+      "title": "new-note-2",
+      "content": "hello-ritikaaaaa-please exercise!",
+      "lastEdited": "2025-11-17T15:50:02.716Z",
+      "isArchived" : false
+    },
+    {
+      "id": 13,
+      "title": "affirmation",
+      "content": "something wonderful is going to happen to me today",
+      "lastEdited": "2025-11-17T15:50:38.365Z",
+      "isArchived" : false
+    }
+  ]
+}
