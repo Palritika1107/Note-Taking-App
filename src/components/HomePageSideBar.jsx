@@ -1,6 +1,6 @@
 import React from 'react'
 
-const HomePageSideBar = ({viewArchived , setViewArchived}) => {
+const HomePageSideBar = ({setViewArchived}) => {
   
   return (
     <>

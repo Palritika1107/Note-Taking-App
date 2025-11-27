@@ -1,16 +1,19 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import DisplayNotes from "./DisplayNotes";
 import SearchBar from "./SearchBar";
 import Note from "./Note";
+import GlobalContext from "../context/GlobalContext";
 
 const HomePageMain = ({ searchTerm, setSearchTerm, viewArchived }) => {
   const [notes, setNotes] = useState([]);
-  const [selectedNote, setSelectedNote] = useState(null);
+  const {selectedNote, setSelectedNote , tags, setTags} = useContext(GlobalContext);
 
   const displayNotes = notes.filter((note) => {
-    return viewArchived?note.isArchived : !note.isArchived;
-  })
+    return viewArchived ? note.isArchived : !note.isArchived;
+  });
+
+ 
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -23,12 +26,20 @@ const HomePageMain = ({ searchTerm, setSearchTerm, viewArchived }) => {
           "Type of data:",
           Array.isArray(data.notes) ? "Array ✅" : typeof data
         );
+        console.log(data.notes[0]);
 
         setNotes(data.notes);
-        if(data.notes.length > 0)
-        {
-            setSelectedNote(data.notes[0]);
-        }
+        setTags(data.tagList);
+       const firstVisibleNote = data.notes.find((note) => 
+        viewArchived ? note.isArchived : !note.isArchived
+      );
+      
+      if (firstVisibleNote) {
+        setSelectedNote(firstVisibleNote);
+      } else {
+        setSelectedNote(null);
+      }
+
       } catch (error) {
         console.error("error fetching notes", notes);
       }
@@ -37,56 +48,114 @@ const HomePageMain = ({ searchTerm, setSearchTerm, viewArchived }) => {
     fetchNotes();
   }, []);
 
-  const deleteNote = async(id) => {
+  useEffect(() => {
+  // When displayNotes changes and there's no selected note (or selected note is not in view)
+  const isSelectedNoteInView = displayNotes.some(note => note.id === selectedNote?.id);
+  
+  if (!isSelectedNoteInView && displayNotes.length > 0) {
+    setSelectedNote(displayNotes[0]);
+  } else if (displayNotes.length === 0) {
+    setSelectedNote(null);
+  }
+}, [displayNotes, viewArchived]);
+
+function updateDefaultSelectedNote(updatedNotes,index){
+    if (selectedNote?.id === id) {
+        if (updatedNotes.length > 0) {
+          const nextIdx = index === 0 ? 0 : index - 1;
+          setSelectedNote(updatedNotes[nextIdx]);
+        } else {
+          setSelectedNote(null);
+        }
+      }
+
+}
+
+ const OnSave = async (newContent) => {
+    
         try{
-        
-            await fetch(`http://localhost:3000/notes/${id}`,
-            {
-                method : "DELETE",
-            });
+          //backend update
+          const res = await fetch(`http://localhost:3000/notes/${selectedNote.id}/update`,{
+            method : "PATCH",
+            headers : {
+              "Content-Type" : "application/json",
+            },
+            body : JSON.stringify({content : newContent}),
+          });
 
-            const index = notes.findIndex((note) => note.id === id);
+          const data = res.json;
+          console.log(data);
 
-            const updatedNotes = notes.filter((note) => note.id!==id);
-            setNotes(updatedNotes);
+          //local state update
+          const updatedNotes = notes.map((note) => {
+              if(note.id === selectedNote.id){
+                return {...note,"content" : newContent};
+              }else{
+                return note;
+              }
+          });
 
-            if(selectedNote?.id === id){
-                if(updatedNotes.length > 0){
-                    const nextIdx = index===0?0:index - 1;
-                    setSelectedNote(updatedNotes[nextIdx]);
-                }else{
-                    setSelectedNote(null);
-                }
-            }
+          setNotes(updatedNotes);
 
         }catch(error){
-            console.error("error deleting notes",error);
+          console.log(error);
         }
+  }
+
+  const deleteNote = async (id) => {
+    try {
+      await fetch(`http://localhost:3000/notes/${id}`, {
+        method: "DELETE",
+      });
+
+      const index = notes.findIndex((note) => note.id === id);
+
+      const updatedNotes = notes.filter((note) => note.id !== id);
+      setNotes(updatedNotes);
+      updateDefaultSelectedNote(updatedNotes,index);
+      
+    } catch (error) {
+      console.error("error deleting notes", error);
+    }
   };
 
   const archiveNote = async (id, newStatus) => {
-        try{
+    try {
+      const res = await fetch(`http://localhost:3000/notes/${id}/archive`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isArchived: newStatus }),
+      });
 
-        const res = await fetch(`http://localhost:3000/notes/${id}/archive`,{
-            method : "PATCH",
-            headers : { "Content-Type" : "application/json", },
-            body : JSON.stringify({ isArchived : newStatus})
-        });
+      const data = await res.json();
 
-        const data = await res.json();
+      console.log(data);
 
-        console.log(data);
+      //instead of fetching again we are updating the local state also simultaneously along with 
+      //data in backend
+      const updatedNotes = notes
+        .map((note) => {
+          // If this is the note being updated
+          if (note.id === id) {
+            return {
+              ...note,
+              isArchived: data.note.isArchived,
+              lastEdited: data.note.lastEdited,
+            };
+          }
+        else{
+         return note ;
+          }
+        })
 
-        setNotes(prev =>
-            prev.map((note) => {
-                return note.id === id ? {...note,isArchived : data.isArchived ,lastEdited : data.lastEdited }
-                :note;
-            })
-        )
+      console.log(updatedNotes);
+      setNotes(updatedNotes);
 
-        }catch(error){
-            console.error("error archiving note",error);
-        }
+      const index = notes.findIndex((note) => note.id === id);
+      updateDefaultSelectedNote(updatedNotes,index);
+    } catch (error) {
+      console.error("error archiving note", error);
+    }
   };
 
   return (
@@ -117,11 +186,25 @@ const HomePageMain = ({ searchTerm, setSearchTerm, viewArchived }) => {
             />
           </div>
           {/* 2. selected notes content */}
-          <div className="w-2/4">{selectedNote && <Note selectedNote={selectedNote} />}</div>
+          <div className="w-2/4">
+            {selectedNote && <Note selectedNote={selectedNote} OnSave={OnSave} />}
+          </div>
           {/*3.  options to delete or archive that note */}
           <div className="w-1/4">
-            <div className="cursor-pointer" onClick={() => archiveNote(selectedNote.id,!selectedNote.isArchived)}>Archive Note</div>
-            <div className="cursor-pointer" onClick={() => deleteNote(selectedNote.id)}>Delete Note</div>
+            <div
+              className="cursor-pointer"
+              onClick={() =>
+                archiveNote(selectedNote.id, !selectedNote.isArchived)
+              }
+            >
+              Archive Note
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => deleteNote(selectedNote.id)}
+            >
+              Delete Note
+            </div>
           </div>
         </div>
       </div>

@@ -12,10 +12,10 @@ const NoteForm = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
 
-    const noteData = { 
+    const noteData = {
       title, 
       content,
-      lastEdited: new Date().toISOString()
+      lastEdited : new Date().toISOString()
      };
 
     try{
@@ -34,6 +34,7 @@ const NoteForm = () => {
       // clear inputs
       setTitle("");
       setContent("");
+      //go back to HomePage
       navigate('/');
     } catch (error) {
       console.error("Error saving note:", error);
@@ -49,7 +50,6 @@ const NoteForm = () => {
       <label htmlFor="content">Content</label>
       <input id="content" type="text"  name="content" value={content} onChange={(e) => setContent(e.target.value)}/>
       <button type="submit">Submit</button>
-      {message && <p>{message}</p>}
     </form>
   )
 }

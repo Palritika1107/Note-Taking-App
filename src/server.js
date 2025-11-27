@@ -11,6 +11,7 @@ app.post("/save", (req, res) => {
 
   const newNote = {
     id : data.counter + 1,
+    isArchived : false,
     ...req.body
   };
 
@@ -42,8 +43,9 @@ app.delete("/notes/:id", (req, res) => {
 });
 
 
+
 app.patch("/notes/:id/archive",(req,res) =>{
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     const { isArchived } = req.body;
 
     const data = JSON.parse(fs.readFileSync("data.json"));
@@ -55,6 +57,59 @@ app.patch("/notes/:id/archive",(req,res) =>{
     }
 
     note.isArchived = isArchived;
+    note.lastEdited = new Date().toISOString();
+
+  fs.writeFileSync("data.json", JSON.stringify(data, null, 2));
+  res.json({ message: "Note archived" ,note});
+
+});
+
+app.patch("/notes/:id/update",(req,res) => {
+
+  const id = parseInt(req.params.id);
+  const { content } = req.body;
+
+    const data = JSON.parse(fs.readFileSync("data.json"));
+    const note = data.notes.find((note) => {
+        return note.id === id;
+    });
+    
+    if(!note){
+      return res.status(404).json({error : "note not found"});
+    }
+
+    note.content = content;
+    note.lastEdited = new Date().toISOString();
+
+  fs.writeFileSync("data.json", JSON.stringify(data, null, 2));
+  res.json({ message: "Note archived" ,note});
+
+});
+
+app.patch("/notes/:id/addtag",(req,res) => {
+
+  const id = parseInt(req.params.id);
+  const { newTag } = req.body;
+
+    const data = JSON.parse(fs.readFileSync("data.json"));
+    const note = data.notes.find((note) => {
+        return note.id === id;
+    });
+    
+    if(!note){
+      return res.status(404).json({error : "note not found"});
+    }
+    
+    if("tags" in note){
+      note.tags.push(newTag);
+    }else{
+        note.tags = [newTag];
+    }
+
+    if(!data.tagList.find((tag) => tag === newTag))
+        data.tagList.push(newTag);
+
+
     note.lastEdited = new Date().toISOString();
 
   fs.writeFileSync("data.json", JSON.stringify(data, null, 2));

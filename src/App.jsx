@@ -17,7 +17,6 @@ function App() {
             <Route path="/create" element={<NoteForm />} />
           </Routes>
         </BrowserRouter>
-      
     </>
   )
 }

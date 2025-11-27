@@ -1,26 +1,44 @@
 {
-  "counter": 13,
+  "counter": 30,
+  "tagList": [
+    "travel",
+    "masters",
+    "urgent"
+  ],
   "notes": [
     {
-      "id": 11,
-      "title": "hello-3",
-      "content": "hi",
-      "lastEdited": "2025-11-16T18:53:27.408Z",
-      "isArchived" : false
+      "id": 27,
+      "isArchived": false,
+      "title": "first",
+      "content": "ghhelloknhgc ",
+      "lastEdited": "2025-11-27T15:16:11.153Z",
+      "tags": [
+        "travel",
+        "masters",
+        "urgent",
+        "urgent"
+      ]
     },
     {
-      "id": 12,
-      "title": "new-note-2",
-      "content": "hello-ritikaaaaa-please exercise!",
-      "lastEdited": "2025-11-17T15:50:02.716Z",
-      "isArchived" : false
+      "id": 28,
+      "isArchived": true,
+      "title": "second",
+      "content": "hello",
+      "lastEdited": "2025-11-24T16:45:13.074Z"
     },
     {
-      "id": 13,
-      "title": "affirmation",
-      "content": "something wonderful is going to happen to me today",
-      "lastEdited": "2025-11-17T15:50:38.365Z",
-      "isArchived" : false
+      "id": 29,
+      "isArchived": false,
+      "title": "second note",
+      "content": "hello ritika",
+      "lastEdited": "2025-11-24T16:45:05.092Z"
+    },
+    {
+      "id": 30,
+      "isArchived": true,
+      "title": "meal-prep",
+      "content": "100g protein",
+      "lastEdited": "2025-11-24T16:45:16.967Z"
     }
   ]
 }

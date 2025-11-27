@@ -8,7 +8,7 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
 
 
   return (
-    <>
+  <>
     <div style={{ marginTop: "20px" }}>
         {notes.length === 0 ? (
           <p>No notes yet!</p>
@@ -16,7 +16,7 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
           notes.map((note, index) => {
             const noteTime = new Date(note.lastEdited).toLocaleString();
           return (<div
-              key={index}
+              key={note.id}
               className={`cursor-pointer transition-colors duration-200 p-4 rounded-lg
            ${selectedNote?.id === note.id 
       ? "bg-gray-300"       // selected
@@ -26,11 +26,11 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
               <h2>{note.title}</h2>
               <p>{noteTime}</p>
             </div>)
-          }
-          ))
+          })
+        )
         }
     </div>
-    </>
+  </>
   )
 }
 
