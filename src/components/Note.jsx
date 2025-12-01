@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState, useRef } from "react";
 import AddTag from "./AddTag";
+import GlobalContext from "../context/GlobalContext";
 
-const Note = ({ selectedNote, OnSave }) => {
+const Note = ({ OnSave }) => {
+  const {notes ,setNotes , selectedNote } = useContext(GlobalContext);
+
   if (!selectedNote) return null;
 
   const [content, setContent] = useState(selectedNote?.content || "");
@@ -46,7 +49,40 @@ const Note = ({ selectedNote, OnSave }) => {
   function handleAddTag(){
     setIsHidden(true);
     setShowAddTagDialogue(true);
-  }
+  };
+
+ const removeTag = async(tagToRemove) => {
+      try{
+      //update frontend
+      const updatedNotes = notes.map((note) => {
+          if(note.id == selectedNote.id){
+              const updatedTags = note.tags.filter((tag) => tag !== tagToRemove);
+              return {...note,tags : updatedTags};
+          }else{
+            return note;
+          }
+      });
+
+      setNotes(updatedNotes);
+      //selectedNote will automatically be updated ->useEffect in contextwrapper
+
+      //update backend
+        const res = await fetch(`http://localhost:3000/notes/${selectedNote.id}/removetag`,{
+          method : "PATCH",
+          headers : {
+              "Content-Type" : "application/json",
+          },
+          body : JSON.stringify({tagToRemove : tagToRemove}),
+        });
+
+        console.log(await res.json());
+        // console.log(`on removing tag ${res.note}`);
+
+      }catch(error){
+        console.log(error);
+      }
+      
+  };
 
   return (
     <>
@@ -60,7 +96,10 @@ const Note = ({ selectedNote, OnSave }) => {
               <div className="flex gap-1">
               {selectedNote.tags?
                 selectedNote.tags.map((tag,idx) => {
-                  return <div key={idx}>{tag}</div>
+                  return (<div key={idx} className="flex gap-2 bg-gray-200">
+                    <div>{tag}</div>
+                    <button onClick={() => removeTag(tag)} className="cursor-pointer">{'\u00D7'}</button>
+                    </div>)
                 }): ""
               }
               </div>

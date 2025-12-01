@@ -6,7 +6,6 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
 
     console.log("NOTES RECEIVED IN DISPLAY:", notes, Array.isArray(notes));
 
-
   return (
   <>
     <div style={{ marginTop: "20px" }}>

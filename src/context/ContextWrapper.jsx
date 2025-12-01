@@ -1,14 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GlobalContext from './GlobalContext';
 
 const ContextWrapper = ({children}) => {
     const [tags,setTags] = useState([]);
     const [selectedNote, setSelectedNote] = useState(null);
+    const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+
+  if(selectedNote){
+    const updated = notes.find((note) => note.id === selectedNote.id);
+    if(updated){
+      setSelectedNote(updated);
+    }
+  }
+
+  },[notes]);
+
 
   return (
     <>
     <GlobalContext.Provider
-        value={{tags , setTags, selectedNote, setSelectedNote}}
+        value={{tags , setTags, selectedNote, setSelectedNote,notes,setNotes}}
     >
         {children}
     </GlobalContext.Provider>

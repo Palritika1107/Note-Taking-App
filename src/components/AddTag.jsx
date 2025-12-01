@@ -5,18 +5,27 @@ import { forwardRef } from "react";
 
 const AddTag = forwardRef((props,ref) => {
 
-    const {tags, setTags, selectedNote, setSelectedNote} = useContext(GlobalContext);
+    const {tags, setTags, selectedNote, setSelectedNote,notes,setNotes} = useContext(GlobalContext);
     const [tag,setTag] = useState("");
 
-    const createTag = async(newTagName) => {
+    const handleTagUpdate = async(newTagName) => {
         try{
         //update local
-        setTags([...tags,newTagName]);
-        setSelectedNote({
-            ...selectedNote,
-            tags : [...selectedNote.tags,newTagName]
-        });
-        //  update backend
+        if(newTagName != ""){
+        if(!tags.find((tag) => tag === newTagName)){
+            setTags([...tags,newTagName]);
+        }
+
+      const updatedNotes = notes.map((note) => {
+        if((note.id === selectedNote.id) && (!note.tags.find((tag) => tag===newTagName))){
+          return {...note ,tags : [...note.tags , newTagName]};
+        }else{
+          return note;
+        }
+      });
+      
+      setNotes(updatedNotes);
+        //update backend
         const res = await fetch(`http://localhost:3000/notes/${selectedNote.id}/addtag`,{
             method : "PATCH",
             headers : {
@@ -25,12 +34,13 @@ const AddTag = forwardRef((props,ref) => {
             body : JSON.stringify({newTag : newTagName}),
         });
 
-        console.log(res);
+        console.log(await res.json());
+      }
         }catch(error){
             console.error(error);
         }
 
-    }   
+    };   
 
   return (
     <div ref={ref} className="border-2 border-solid border-red-400">
@@ -49,11 +59,11 @@ const AddTag = forwardRef((props,ref) => {
         {/* // list of already existing tags */}
         <div>
             {tags.map((t,idx) => {
-                return <div key={idx}>{t}</div>
+                return <div onClick={() => handleTagUpdate(t)} className="hover:bg-gray-200 cursor-pointer" key={idx}>{t}</div>
             })}
         </div>
         {/* //create tag option */}
-        <div onClick={() => createTag(tag)}>+ Create {tag}</div>
+        <div onClick={() => handleTagUpdate(tag)}>+ Create {tag}</div>
       
     </div>
   );

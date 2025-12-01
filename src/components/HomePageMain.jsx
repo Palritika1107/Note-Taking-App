@@ -6,8 +6,8 @@ import Note from "./Note";
 import GlobalContext from "../context/GlobalContext";
 
 const HomePageMain = ({ searchTerm, setSearchTerm, viewArchived }) => {
-  const [notes, setNotes] = useState([]);
-  const {selectedNote, setSelectedNote , tags, setTags} = useContext(GlobalContext);
+  
+  const {selectedNote, setSelectedNote , tags, setTags,notes,setNotes} = useContext(GlobalContext);
 
   const displayNotes = notes.filter((note) => {
     return viewArchived ? note.isArchived : !note.isArchived;
@@ -187,7 +187,7 @@ function updateDefaultSelectedNote(updatedNotes,index){
           </div>
           {/* 2. selected notes content */}
           <div className="w-2/4">
-            {selectedNote && <Note selectedNote={selectedNote} OnSave={OnSave} />}
+            {selectedNote && <Note OnSave={OnSave} />}
           </div>
           {/*3.  options to delete or archive that note */}
           <div className="w-1/4">
