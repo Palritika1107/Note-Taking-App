@@ -6,7 +6,9 @@ const GlobalContext = React.createContext({
     selectedNote : null, 
     setSelectedNote : () => {},
     notes : [],
-    setNotes : () => {}
+    setNotes : () => {},
+    selectedTag : "",
+    setSelectedTag : () => {}
 });
 
 export default GlobalContext

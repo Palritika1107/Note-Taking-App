@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import AddTag from "./AddTag";
 import GlobalContext from "../context/GlobalContext";
 
-const Note = ({ OnSave }) => {
+const Note = () => {
   const {notes ,setNotes , selectedNote } = useContext(GlobalContext);
 
   if (!selectedNote) return null;
@@ -82,6 +82,38 @@ const Note = ({ OnSave }) => {
         console.log(error);
       }
       
+  };
+
+
+  const OnSave = async (newContent) => {
+    
+        try{
+          //backend update
+          const res = await fetch(`http://localhost:3000/notes/${selectedNote.id}/update`,{
+            method : "PATCH",
+            headers : {
+              "Content-Type" : "application/json",
+            },
+            body : JSON.stringify({content : newContent}),
+          });
+
+          const data = res.json;
+          console.log(data);
+
+          //local state update
+          const updatedNotes = notes.map((note) => {
+              if(note.id === selectedNote.id){
+                return {...note,"content" : newContent};
+              }else{
+                return note;
+              }
+          });
+
+          setNotes(updatedNotes);
+
+        }catch(error){
+          console.log(error);
+        }
   };
 
   return (

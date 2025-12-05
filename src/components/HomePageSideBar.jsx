@@ -1,20 +1,20 @@
 import React, { useContext } from "react";
 import GlobalContext from "../context/GlobalContext";
 
-const HomePageSideBar = ({ setViewArchived }) => {
-  const { tags } = useContext(GlobalContext);
+const HomePageSideBar = ({ viewArchived , setViewArchived }) => {
+  const { tags, selectedTag, setSelectedTag} = useContext(GlobalContext);
 
   return (
       <div className="flex flex-col gap-10">
         <h1>Notes</h1>
-        <div onClick={() => setViewArchived(false)}>All Notes</div>
-        <div onClick={() => setViewArchived(true)}>Archived Notes</div>
+        <div className={!viewArchived? "bg-gray-200" : ""} onClick={() => setViewArchived(false)}>All Notes</div>
+        <div className={viewArchived? "bg-gray-200" : ""} onClick={() => setViewArchived(true)}>Archived Notes</div>
         {/* list of tags */}
         <div>
           {/* tag icon */}
-          {tags.map((tag,idx) =>{
+          {tags.map((tag,idx) => {
            return (
-            <div key={idx} className="flex gap-3">
+          <div onClick={() => setSelectedTag(prev => prev===tag ? null : tag)} key={idx} className={`flex gap-3 ${tag===selectedTag ? "bg-gray-300" : ""}` }>
             <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -37,10 +37,10 @@ const HomePageSideBar = ({ setViewArchived }) => {
             </svg>
             </div>
             <div>{tag}</div>
-            </div>
+          </div>
           )}
-        )
-          }
+         )
+         }
        </div>
 
       </div>

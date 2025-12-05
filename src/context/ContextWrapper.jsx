@@ -5,6 +5,7 @@ const ContextWrapper = ({children}) => {
     const [tags,setTags] = useState([]);
     const [selectedNote, setSelectedNote] = useState(null);
     const [notes, setNotes] = useState([]);
+    const [selectedTag, setSelectedTag] = useState("");
 
   useEffect(() => {
 
@@ -19,13 +20,13 @@ const ContextWrapper = ({children}) => {
 
 
   return (
-    <>
+   <>
     <GlobalContext.Provider
-        value={{tags , setTags, selectedNote, setSelectedNote,notes,setNotes}}
+        value={{tags,setTags, selectedNote, setSelectedNote,notes,setNotes,selectedTag,setSelectedTag}}
     >
         {children}
     </GlobalContext.Provider>
-    </>
+   </>
   );
 };
 
