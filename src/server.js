@@ -20,7 +20,7 @@ app.post("/save", (req, res) => {
   data.counter++;
   
   fs.writeFileSync("data.json", JSON.stringify(data, null, 2));
-  res.send({ message: "Saved!" });
+  res.send({ message: "Saved!" ,newNote});
 });
 
 app.get("/notes", (req, res) => {
@@ -68,7 +68,7 @@ app.patch("/notes/:id/archive",(req,res) =>{
 app.patch("/notes/:id/update",(req,res) => {
 
   const id = parseInt(req.params.id);
-  const { content } = req.body;
+  const { content, title } = req.body;
 
     const data = JSON.parse(fs.readFileSync("data.json"));
     const note = data.notes.find((note) => {
@@ -80,6 +80,7 @@ app.patch("/notes/:id/update",(req,res) => {
     }
 
     note.content = content;
+    note.title = title;
     note.lastEdited = new Date().toISOString();
 
   fs.writeFileSync("data.json", JSON.stringify(data, null, 2));

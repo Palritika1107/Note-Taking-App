@@ -1,23 +1,22 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import HomePageMain from "./HomePageMain";
 import HomePageSideBar from "./HomePageSideBar";
+import GlobalContext from "../context/GlobalContext";
 
 
 const Home = () => {
     const [searchTerm,setSearchTerm] = useState("");
-    const [viewArchived, setViewArchived] = useState(false);
-
   return (
     <>
       <div className="flex">
         <div className="w-1/4">
-          <HomePageSideBar viewArchived={viewArchived} setViewArchived={setViewArchived}/>
+          <HomePageSideBar />
         </div>
         <div className="w-3/4">
-          <HomePageMain viewArchived={viewArchived} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <HomePageMain  searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
       </div>
-     </>
+    </>
   )
 }
 

@@ -16,7 +16,7 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
             const noteTime = new Date(note.lastEdited).toLocaleString();
           return (<div
               key={note.id}
-              className={`cursor-pointer transition-colors duration-200 p-4 rounded-lg
+              className={`cursor-pointer transition-colors duration-200 p-4 rounded-lg px-3 py-2
            ${selectedNote?.id === note.id 
       ? "bg-gray-300"       // selected
       : "bg-white hover:bg-gray-200"}`}
