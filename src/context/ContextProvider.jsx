@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import GlobalContext from "./GlobalContext";
 
-const ContextWrapper = ({ children }) => {
+const ContextProvider = ({ children }) => {
   const [tags, setTags] = useState([]);
   const [selectedNote, setSelectedNote] = useState(null);
   const [notes, setNotes] = useState([]);
@@ -17,26 +17,27 @@ const ContextWrapper = ({ children }) => {
     }
   }, [notes]);
 
+  const values = {
+    tags,
+    setTags,
+    selectedNote,
+    setSelectedNote,
+    notes,
+    setNotes,
+    selectedTag,
+    setSelectedTag,
+    viewArchived,
+    setViewArchived,
+
+  };
+
   return (
     <>
-      <GlobalContext.Provider
-        value={{
-          tags,
-          setTags,
-          selectedNote,
-          setSelectedNote,
-          notes,
-          setNotes,
-          selectedTag,
-          setSelectedTag,
-          viewArchived,
-          setViewArchived,
-        }}
-      >
+      <GlobalContext.Provider value={values}>
         {children}
       </GlobalContext.Provider>
     </>
   );
 };
 
-export default ContextWrapper;
+export default ContextProvider;
