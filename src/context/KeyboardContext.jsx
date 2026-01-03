@@ -41,7 +41,7 @@ export const KeyboardProvider = ({ children }) => {
     const area = active ? registry.current.areas[active] : null;
 
     // Global shortcuts
-    if ((e.key === "k" && meta) || e.key === "/") {
+    if((e.key === "k" && meta) || e.key === "/") {
       // focus search area
       e.preventDefault();
       const search = registry.current.areas["search"];
@@ -83,6 +83,7 @@ export const KeyboardProvider = ({ children }) => {
         if (area.prev) area.prev();
         return;
       }
+      
       if (e.key === "Enter") {
         e.preventDefault();
         if (area.activate) area.activate();
