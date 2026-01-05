@@ -1,29 +1,63 @@
-import React, { useContext } from "react";
+import React, { useContext,useEffect } from "react";
 import GlobalContext from "../context/GlobalContext";
 import HomeIcon from "../assets/icons/home-icon.svg";
 import ArchiveIcon from "../assets/icons/archive-icon.svg";
+import { useKeyboard } from "../context/KeyboardContext";
+import useRovingList from "../hooks/useRovingList";
+
 
 const HomePageSideBar = () => {
   const { tags, selectedTag, setSelectedTag, viewArchived, setViewArchived } =
     useContext(GlobalContext);
+  
+  const { registerArea, unregisterArea, setActiveArea } = useKeyboard();
+
+  // we create a "sidebar" items array (All Notes, Archived, then tags)
+  const items = ["all", "archived", ...tags];
+
+  const { refs, next, prev, activate, focusFirst } = useRovingList({
+    items,
+    onActivate: (idx) => {
+      if (idx === 0) setViewArchived(false);
+      else if (idx === 1) setViewArchived(true);
+      else setSelectedTag(items[idx]);
+    },
+  });
+
+    useEffect(() => {
+    registerArea("sidebar", {
+      next,
+      prev,
+      activate,
+      focus: focusFirst,
+    });
+    return () => unregisterArea("sidebar");
+  }, [next, prev, activate, focusFirst, registerArea, unregisterArea]);
+
 
   return (
     <div className="h-full border-r border-gray-300 bg-white flex flex-col gap-8 p-6">
       <h1 className="text-2xl font-semibold">Notes</h1>
-      <div className="flex flex-col gap-2">
+      <nav aria-label="Main sidebar" onClick={() => setActiveArea("sidebar")} className="flex flex-col gap-2">
         <div
+          ref={(el) => (refs.current[0] = el)} onFocus={() => setActiveArea("sidebar")}
+
           className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer
             ${!viewArchived ? "bg-gray-100 font-medium" : "text-gray-600"}
             hover:bg-gray-100`}
+
           onClick={() => setViewArchived(false)}
         >
           <img src={HomeIcon} className="w-5 h-5" />
           <div>All Notes</div>
         </div>
         <div
+          ref={(el) => (refs.current[1] = el)} onFocus={() => setActiveArea("sidebar")}
+
           className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer
             ${viewArchived ? "bg-gray-100 font-medium" : "text-gray-600"}
             hover:bg-gray-100 border-b border-gray-300`}
+
           onClick={() => setViewArchived(true)}
         >
           <img src={ArchiveIcon} className="w-5 h-5" />
@@ -37,13 +71,16 @@ const HomePageSideBar = () => {
           <div className="flex flex-col gap-1">
             {/* tag icon */}
             {tags.map((tag, idx) => {
+              const index = idx + 2;
               return (
                 <div
-                  onClick={() =>
+              onClick={() =>
                     setSelectedTag((prev) => (prev === tag ? null : tag))
                   }
-                  key={idx}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer
+              key={tag}
+              ref={(el) => (refs.current[index] = el)}
+              onFocus={() => setActiveArea("sidebar")}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer
                 ${
                   selectedTag === tag
                     ? "bg-gray-100 font-medium"
@@ -77,7 +114,7 @@ const HomePageSideBar = () => {
             })}
           </div>
         </div>
-      </div>
+      </nav>
     </div>
   );
 };

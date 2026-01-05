@@ -15,8 +15,11 @@ export default function useRovingList({ items = [], onActivate }) {
   }, []);
 
   const next = useCallback(() => {
+    console.log(refs.current);
+    
     const nextIndex =
       (focusedIndexRef.current + 1) % Math.max(1, items.length);
+    console.log(nextIndex);
     focusItem(nextIndex);
   }, [items.length, focusItem]);
 
@@ -29,7 +32,7 @@ export default function useRovingList({ items = [], onActivate }) {
 
   const activate = useCallback(() => {
     const idx = focusedIndexRef.current;
-    if (onActivate) onActivate(idx);
+    if(onActivate) onActivate(idx);
   }, [onActivate]);
 
   // helper to set initial focus (e.g., when area becomes active)

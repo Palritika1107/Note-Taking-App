@@ -109,8 +109,6 @@ const Note = () => {
       );
 
       const data = res.json;
-      console.log(data);
-
       //local state update
       const updatedNotes = notes.map((note) => {
         if (note.id === selectedNote.id) {

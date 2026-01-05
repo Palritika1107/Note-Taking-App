@@ -1,5 +1,5 @@
 {
-  "counter": 79,
+  "counter": 80,
   "tagList": [
     "travel",
     "masters",
@@ -10,16 +10,6 @@
     "demo"
   ],
   "notes": [
-    {
-      "id": 64,
-      "isArchived": false,
-      "tags": [
-        "travel"
-      ],
-      "title": "awesome",
-      "content": "first",
-      "lastEdited": "2025-12-09T12:21:43.015Z"
-    },
     {
       "id": 65,
       "isArchived": true,
@@ -109,6 +99,14 @@
       "title": "Untitled Note",
       "content": "",
       "lastEdited": "2025-12-09T02:59:25.284Z"
+    },
+    {
+      "id": 80,
+      "isArchived": false,
+      "tags": [],
+      "title": "test-monday",
+      "content": "hello",
+      "lastEdited": "2026-01-05T03:26:18.796Z"
     }
   ]
 }

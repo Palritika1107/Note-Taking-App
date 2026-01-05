@@ -63,7 +63,7 @@ const AddTag = forwardRef((props,ref) => {
             })}
         </div>
         {/* //create tag option */}
-        <div onClick={() => handleTagUpdate(tag)}>+ Create {tag}</div>
+      <div onClick={() => handleTagUpdate(tag)}>+ Create {tag}</div>
       
     </div>
   );

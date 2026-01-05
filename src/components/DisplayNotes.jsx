@@ -28,14 +28,18 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
       next,
       prev,
       activate,
-      focus: focusFirst,
+      focus : focusFirst,
     });
+
+    setActiveArea("notes");
+
     return () => unregisterArea("notes");
   }, [next, prev, activate, focusFirst, registerArea, unregisterArea]);
 
   const onOpenNote = (note) => { 
   setSelectedNote(note);
-};
+  // setActiveArea("notes");
+ };
 
 
   console.log("NOTES RECEIVED IN DISPLAY:", notes, Array.isArray(notes));
@@ -64,6 +68,7 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
               onFocus={() => {
             // when keyboard focus lands here, set provider active area
             setActiveArea("notes");
+            //onOpenNote(note);//when i switch to notes section using TAB do we need this here ? check
           }}
 
             >
@@ -75,7 +80,7 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
         }
     </div>
   </>
-  )
+ )
 }
 
 export default DisplayNotes

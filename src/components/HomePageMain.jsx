@@ -57,13 +57,6 @@ const HomePageMain = ({ searchTerm, setSearchTerm }) => {
         const response = await fetch("http://localhost:3000/notes");
         const data = await response.json();
 
-        console.log("Fetched data:", data.notes);
-        console.log(
-          "Type of data:",
-          Array.isArray(data.notes) ? "Array ✅" : typeof data
-        );
-        console.log(data.notes[0]);
-
         setNotes(data.notes);
         setTags(data.tagList);
         const firstVisibleNote = data.notes.find((note) =>

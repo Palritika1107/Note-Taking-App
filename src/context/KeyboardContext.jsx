@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useEffect } from "react";
+import React, { createContext, useContext, useRef, useEffect, useCallback } from "react";
 
 const KeyboardContext = createContext();
 
@@ -22,23 +22,27 @@ export const KeyboardProvider = ({ children }) => {
     areas: {},
   });
 
-  const registerArea = (name, handlers) => {
+  const registerArea = useCallback((name, handlers) => {
     registry.current.areas[name] = handlers;
-  };
+    console.log("area registered",name);
+    
+  },[])
 
-  const unregisterArea = (name) => {
+  const unregisterArea = useCallback((name) => {
     delete registry.current.areas[name];
-  };
+  },[])
 
-  const setActiveArea = (name) => {
+  const setActiveArea = useCallback((name) => {
+    console.log("ACTIVE AREA CHANGED TO:", name);
     registry.current.activeArea = name;
-  };
+  },[])
 
   const handleKey = (e) => {
     // normalize modifiers
     const meta = e.ctrlKey || e.metaKey;
     const active = registry.current.activeArea;
     const area = active ? registry.current.areas[active] : null;
+    console.log("active",active);
 
     // Global shortcuts
     if((e.key === "k" && meta) || e.key === "/") {
@@ -72,15 +76,22 @@ export const KeyboardProvider = ({ children }) => {
 
     // If there's an active area delegate keys
     if (area) {
+    
       // navigation keys: j / k / ArrowDown / ArrowUp
       if (e.key === "j" || e.key === "ArrowDown") {
         e.preventDefault();
-        if (area.next) area.next();
+        console.log("here");
+
+        if(area.next) {
+          area.next();
+        }
+        if (area.activate) area.activate();
         return;
       }
       if (e.key === "k" || e.key === "ArrowUp") {
         e.preventDefault();
         if (area.prev) area.prev();
+        if (area.activate) area.activate();
         return;
       }
       
