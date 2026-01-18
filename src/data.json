@@ -1,5 +1,5 @@
 {
-  "counter": 80,
+  "counter": 81,
   "tagList": [
     "travel",
     "masters",
@@ -107,6 +107,14 @@
       "title": "test-monday",
       "content": "hello",
       "lastEdited": "2026-01-05T03:26:18.796Z"
+    },
+    {
+      "id": 81,
+      "isArchived": false,
+      "tags": [],
+      "title": "new-note-to-test",
+      "content": "hello",
+      "lastEdited": "2026-01-14T10:07:27.404Z"
     }
   ]
 }

@@ -76,8 +76,7 @@ export const KeyboardProvider = ({ children }) => {
 
     // If there's an active area delegate keys
     if (area) {
-    
-      // navigation keys: j / k / ArrowDown / ArrowUp
+    //navigation keys: j / k / ArrowDown / ArrowUp
       if (e.key === "j" || e.key === "ArrowDown") {
         e.preventDefault();
         console.log("here");
@@ -85,6 +84,7 @@ export const KeyboardProvider = ({ children }) => {
         if(area.next) {
           area.next();
         }
+        
         if (area.activate) area.activate();
         return;
       }

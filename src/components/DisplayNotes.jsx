@@ -50,7 +50,7 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
     style={{ marginTop: "20px" }}
     onClick={() => setActiveArea("notes")}
     >
-        {notes.length === 0 ? (
+      {notes.length === 0 ? (
           <p>No notes yet!</p>
         ) : (
           notes.map((note, index) => {
@@ -67,14 +67,15 @@ const DisplayNotes = ({notes,setSelectedNote,selectedNote}) => {
               onClick={() => onOpenNote(note)}
               onFocus={() => {
             // when keyboard focus lands here, set provider active area
+            console.log("selecetd note",index);
             setActiveArea("notes");
             //onOpenNote(note);//when i switch to notes section using TAB do we need this here ? check
           }}
-
-            >
+          >
               <h2>{note.title}</h2>
               <p>{noteTime}</p>
-            </div>)
+          </div>
+            )
           })
         )
         }

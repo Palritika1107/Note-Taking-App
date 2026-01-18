@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 
 export default function useRovingList({ items = [], onActivate }) {
   // store refs for each item
@@ -6,10 +6,16 @@ export default function useRovingList({ items = [], onActivate }) {
   refs.current = refs.current.slice(0, items.length);
   const focusedIndexRef = useRef(0);
 
+  useEffect(() => {
+  focusedIndexRef.current = 0;
+}, [items]);
+
   const focusItem = useCallback((index) => {
     const el = refs.current[index];
+    console.log("tabIndex",el.tabIndex);
     if (el && el.focus) {
-      el.focus();
+      el.focus(); //this has no visual affect as onFocus only sets active area , setActivetag , setactivenote is what 
+      //creates highlights on UI 
       focusedIndexRef.current = index;
     }
   }, []);
